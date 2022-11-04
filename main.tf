@@ -38,43 +38,98 @@ resource "google_bigtable_table" "table" {
   name          = "tf-table"
   instance_name = google_bigtable_instance.instance.name
 
-  # column_family {
-  #   family = "name"
-  #   gc_rule {
-  #     #  mode = "UNION"
+  column_family {
+    family = "name"
+    gc_policy {
+       mode = "UNION"
 
-  #       # max_age {
-  #       #   duration = "120h" # 7 days
-  #       # }
+        max_age {
+          duration = "110h" # 7 days
+        }
 
-  #       max_version {
-  #         number = 10
-  #       }
-  #       # max_age {
-  #       #     duration = "130h"
-  #       # }
-  #       # mode = "UNION"
-  #       # gc_rules = "1"
-  #   }
-  # }
-
-  # column_family {
-  #   family = "email"
-  #   gc_rule {
-  #     max_age {
-  #       duration = "120h" # 7 days
-  #     }
-  #   }
-  # }
+        max_version {
+          number = 9
+        }
+        # max_age {
+        #     duration = "130h"
+        # }
+        # mode = "UNION"
+        # gc_rules = "1"
+    }
+  }
 
   column_family {
-    family = "password"
-    gc_rule {
-      max_age {
-        duration = "11h" # 7 days
+    family = "password2"
+    gc_policy {
+      max_version {
+        number = "12" # 7 days
       }
     }
   }
+
+  column_family {
+    family = "column1"
+    gc_policy {
+      # max_version {
+      #   number = 11
+      # }
+      max_age {
+        duration = "9h" # 7 days
+      }
+    }
+  }
+
+  column_family {
+    family = "column2"
+    gc_policy {
+      max_age {
+        duration = "20h" # 7 days
+      }
+    }
+  }
+
+  # column_family {
+  #   family = "column3"
+  #   gc_policy {
+  #     gc_rules = <<EOF
+  #     {
+  #       "mode": "union",
+  #       "rules": [
+  #         {
+  #           "max_age": "10h"
+  #         },
+  #         {
+  #           "mode": "intersection",
+  #           "rules": [
+  #             {
+  #               "max_age": "2h"
+  #             },
+  #             {
+  #               "max_version": 7
+  #             }
+  #           ]
+  #         }
+  #       ]
+  #     }
+  #     EOF
+  #   }
+  # }
+
+
+
+   
+
+
+#   column_family {
+#     family = "column3"
+#     gc_policy {
+#       max_age {
+#         duration = "120h" # 7 days
+#       }
+#     }
+#   }
+
+
 }
 
 # resource "google_bigtable_gc_policy" "policy" {
